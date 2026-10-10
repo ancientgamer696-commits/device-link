@@ -23,7 +23,7 @@ Built as a prototype for Redmi Note 10 Lite / Note 9 Pro (any Android 8+ works).
 
 ## Quick start (2 minutes)
 
-1. **Download `app-debug.apk`** from the [latest release](../../releases/latest) → install
+1. **Download `app-debug.apk`** from the [latest release](../../releases/latest) → **DeviceLink-release.apk** → install
    (MIUI: allow *Install unknown apps* for your browser/File manager).
 2. Open **DeviceLink**. On MIUI do this first, in order:
    - *Battery saver → No restrictions* + press button **3** in the app (ignore battery optimizations)
@@ -87,6 +87,17 @@ policy, not a bug in this APK. Debug-signed + no install base = flagged. Fixes, 
    `adb install app-debug.apk`.
 5. v0.3+ of this app dropped `QUERY_ALL_PACKAGES` / battery-optimization exemption (big heuristic
    triggers) and ships a real icon — flagged less often.
+
+### Zero-warning install without turning Play Protect off: `pm install` via LADB (no PC, no root)
+
+Play Protect only guards the *package installer UI* — a `pm install` from an adb shell is a different
+entry point and always works. On Android 11+:
+1. Install [LADB](https://github.com/tytydraco/LADB/releases) (no dangerous perms → not blocked).
+2. Phone: Settings → Developer options → **Wireless debugging** ON → *Pair device with pairing code* →
+   in LADB enter the 6-digit code (one time only).
+3. Start LADB shell → `pm install -g /storage/emulated/0/Download/DeviceLink-release.apk` → *Success*.
+   (Download folder = wherever the APK sits; `-g` pre-grants runtime perms.)
+Updates: same one-liner over the new APK. That's the whole ceremony.
 
 After install, MIUI will also warn *“this app can read your screen”* when you enable the Input
 accessibility service — that warning is expected for any remote-control app; tap Allow.

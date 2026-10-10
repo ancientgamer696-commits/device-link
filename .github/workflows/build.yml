@@ -18,15 +18,28 @@ jobs:
         with:
           distribution: temurin
           java-version: '17'
+      - name: Place release keystore (from repo secret)
+        env:
+          DL_KEYSTORE_B64: ${{ secrets.DL_KEYSTORE_B64 }}
+        run: |
+          if [ -n "$DL_KEYSTORE_B64" ]; then
+            mkdir -p android/keystore
+            echo "$DL_KEYSTORE_B64" | base64 -d > android/keystore/release.keystore
+            ls -la android/keystore
+          fi
       - uses: gradle/actions/setup-gradle@v3
         with:
           gradle-version: '8.5'
-      - name: Assemble debug APK
-        run: cd android && gradle --no-daemon assembleDebug
+      - name: Assemble debug + release APKs
+        run: cd android && gradle --no-daemon assembleDebug assembleRelease
       - uses: actions/upload-artifact@v4
         with:
           name: devicelink-apk
           path: android/app/build/outputs/apk/debug/app-debug.apk
+      - uses: actions/upload-artifact@v4
+        with:
+          name: devicelink-release
+          path: android/app/build/outputs/apk/release/app-release*.apk
 
   release:
     needs: apk
@@ -36,9 +49,19 @@ jobs:
       - uses: actions/download-artifact@v4
         with:
           name: devicelink-apk
+      - uses: actions/download-artifact@v4
+        with:
+          name: devicelink-release
+      - run: |
+          for f in app-release*.apk; do mv "$f" DeviceLink-release.apk; done 2>/dev/null || true
+          ls -la
       - uses: softprops/action-gh-release@v2
         with:
-          files: app-debug.apk
+          files: |
+            DeviceLink-release.apk
+            app-debug.apk
           body: |
-            DeviceLink prototype APK (debug-signed).
-            Install on your own Redmi/Android 8+. LAN-only remote: viewer at http://<phone-ip>:8766
+            DeviceLink prototype — **DeviceLink-release.apk** is signed with the project release key (not a debug cert).
+            Install on your own Android 8+ (Redmi tested target). LAN viewer: http://<phone-ip>:8766
+            If Play Protect hard-blocks sideloads (Android 15/16 policy on accessibility apps): use
+            LADB/pm-install or temporarily disable Play Protect scanning — see README "Play Protect" section.
