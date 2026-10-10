@@ -110,7 +110,7 @@ function rot(v){ send({t:'rot',v:v}); }
 function apps(){ send({t:'apps'}); document.getElementById('apps').style.display='block'; document.getElementById('apps').innerHTML='<span style="color:#8b97ae">loading apps…</span>'; }
 function fillApps(a){
   var el=document.getElementById('apps'); el.style.display='block'; el.innerHTML='';
-  if(!a.length){ el.innerHTML='<span style="color:#8b97ae">Android 11+ — allow “query all packages” in app settings; abhi limited list</span>'; return; }
+  if(!a.length){ el.innerHTML='<span style="color:#8b97ae">koi app visible nahi (Android package-visibility) — URL open use karo</span>'; return; }
   a.forEach(function(x){ var b=document.createElement('button'); b.textContent=x.n; b.onclick=function(){ send({t:'launch',pkg:x.p}); }; el.appendChild(b); });
 }
 function shot(){

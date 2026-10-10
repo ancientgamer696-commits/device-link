@@ -73,6 +73,24 @@ Phone → browser: binary frames = **JPEG** (screen or camera) · `{t:"meta", mo
 * Security: **LAN-only, no auth**. Anyone on your Wi-Fi can view/control while the service runs. Stop the notification to kill it. Do not port-forward. The optional relay adds pairing codes but still ships without end-to-end encryption.
 * Not for Play Store; personal/demo use only, on devices you own.
 
+## Play Protect says “app blocked”? (Android 15/16 + MIUI 14+)
+
+Google now **hard-blocks sideloaded apps that request Accessibility** (anti-fraud policy) — that's the
+policy, not a bug in this APK. Debug-signed + no install base = flagged. Fixes, easiest first:
+
+1. On the block dialog: tap **Details / More info** → **Install anyway (unsafe)** if shown → done.
+2. Turn scanning off temporarily: **Play Store → your profile icon → Play Protect → ⚙ Settings →
+   “Scan apps with Play Protect” OFF** → install from Files → re-enable.
+3. Android 15/16 with no “Install anyway”: **Settings → Security & privacy → More security settings →
+   Google Play Protect → turn off** (or on MIUI: disable “MIUI Optimization” once in Developer options).
+4. Last resort (installs bypassing the package installer, no root): on a PC with adb —
+   `adb install app-debug.apk`.
+5. v0.3+ of this app dropped `QUERY_ALL_PACKAGES` / battery-optimization exemption (big heuristic
+   triggers) and ships a real icon — flagged less often.
+
+After install, MIUI will also warn *“this app can read your screen”* when you enable the Input
+accessibility service — that warning is expected for any remote-control app; tap Allow.
+
 ## Build
 
 Push to `main` → GitHub Actions builds the debug APK (artifact). Push a tag `vX.Y.Z` → it also opens a GitHub Release with `app-debug.apk`.
