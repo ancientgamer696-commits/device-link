@@ -1,6 +1,7 @@
 package com.santi.devicelink
 
 import android.accessibilityservice.AccessibilityService
+import android.accessibilityservice.GestureDescription
 import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
@@ -10,6 +11,7 @@ import android.os.Handler
 import android.os.Looper
 import android.view.accessibility.AccessibilityEvent
 import android.view.accessibility.AccessibilityNodeInfo
+import android.accessibilityservice.AccessibilityService.StrokeDescription
 import android.widget.Toast
 
 class InputService : AccessibilityService() {

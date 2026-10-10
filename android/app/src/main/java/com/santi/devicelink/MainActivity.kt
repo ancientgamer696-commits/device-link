@@ -83,7 +83,7 @@ class MainActivity : Activity() {
         scr.addView(root)
         setContentView(scr)
 
-        val perms = ArrayList(arrayOf(android.Manifest.permission.CAMERA))
+        val perms = mutableListOf(android.Manifest.permission.CAMERA)
         if (Build.VERSION.SDK_INT >= 33) perms.add(android.Manifest.permission.POST_NOTIFICATIONS)
         requestPermissions(perms.toTypedArray(), 11)
 

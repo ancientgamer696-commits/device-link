@@ -45,6 +45,7 @@ class StreamService : Service() {
     private val h = Handler(Looper.getMainLooper())
     private var scrW = 720; private var scrH = 1280
     private var lastJpeg: ByteArray? = null
+    private var pixBuf: IntArray? = null
     private var orientationListener: OrientationEventListener? = null
     private var batteryPct = -1
 
@@ -158,20 +159,32 @@ class StreamService : Service() {
         try {
             val plane = img.planes[0]
             val buf = plane.buffer
-            val bmp = Bitmap.createBitmap(img.width, img.height, Bitmap.Config.ARGB_8888, buf, plane.rowStride)
-            val maxDim = 620
-            val scale = maxDim.toFloat() / maxOf(bmp.width, bmp.height)
-            val out: Bitmap = if (scale < 1f) {
-                Matrix().also { it.postScale(scale, scale) }.let { m ->
-                    Bitmap.createBitmap(bmp, 0, 0, bmp.width, bmp.height, m, true)
+            val stride = plane.rowStride
+            val w = img.width; val hh = img.height
+            if (pixBuf == null || pixBuf!!.size < w * hh) pixBuf = IntArray(w * hh)
+            val pix = pixBuf!!
+            val last = buf.limit() / 4
+            for (r in 0 until hh) {
+                val base = r * stride / 4
+                if (base + w <= last) {
+                    buf.position(base * 4)
+                    buf.asIntBuffer().get(pix, r * w, w)
                 }
-            } else bmp
+            }
+            val full = Bitmap.createBitmap(w, hh, Bitmap.Config.ARGB_8888)
+            full.setPixels(pix, 0, w, 0, 0, w, hh)
+            val maxDim = 620
+            val scale = maxDim.toFloat() / maxOf(w, hh)
+            val out: Bitmap = if (scale < 1f) {
+                val m = Matrix().apply { postScale(scale, scale) }
+                Bitmap.createBitmap(full, 0, 0, w, hh, m, true)
+            } else full
             val bos = ByteArrayOutputStream(60 * 1024)
             out.compress(Bitmap.CompressFormat.JPEG, 46, bos)
             lastJpeg = bos.toByteArray()
             ws?.bcast(lastJpeg!!)
-            if (out !== bmp) out.recycle()
-            bmp.recycle()
+            if (out !== full) out.recycle()
+            full.recycle()
         } catch (_: Exception) {} finally { try { img.close() } catch (_: Exception) {} }
     }
 
