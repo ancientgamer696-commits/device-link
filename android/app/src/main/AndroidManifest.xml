@@ -12,18 +12,18 @@
     <uses-permission android:name="android.permission.WRITE_SETTINGS"
         xmlns:tools="http://schemas.android.com/tools" tools:ignore="ProtectedPermissions"/>
 
+    <queries>
+        <intent>
+            <action android:name="android.intent.action.MAIN"/>
+            <category android:name="android.intent.category.LAUNCHER"/>
+        </intent>
+    </queries>
+
     <application
         android:label="DeviceLink"
         android:icon="@mipmap/ic_launcher"
         android:usesCleartextTraffic="true"
         android:theme="@android:style/Theme.Material.Light">
-
-        <queries>
-            <intent>
-                <action android:name="android.intent.action.MAIN"/>
-                <category android:name="android.intent.category.LAUNCHER"/>
-            </intent>
-        </queries>
 
         <activity android:name=".MainActivity" android:exported="true" android:screenOrientation="portrait">
             <intent-filter>
