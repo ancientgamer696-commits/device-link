@@ -51,7 +51,7 @@ in your browser **and** on the phone (`Pictures/DeviceLink`).
 
 * **Repo `worker/`** — a Cloudflare Durable-Object relay (`tunnel.js`) that lets you reach the phone
   from outside the LAN with a pairing code. Optional; deploy with `wrangler`.
-* **`site/index.html`** — GitHub-Pages launcher page (enter phone IP → opens the viewer).
+* **`index.html`** (repo root) — GitHub-Pages launcher page (enter phone IP → opens the viewer).
 * **`android/app/src/main/assets/viewer.html`** — the whole remote UI, single file, also served by the phone.
 
 ## Message protocol (ws `:8765`)
