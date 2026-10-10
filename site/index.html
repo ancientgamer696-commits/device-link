@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>DeviceLink — control your Android from the browser</title>
+<style>
+:root{--bg:#0b0e14;--card:#141a26;--line:#232c3f;--tx:#e8eefc;--dim:#8b97ae;--acc:#37e0a6}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:radial-gradient(1200px 700px at 70% -10%,#12233a 0%,var(--bg) 55%);color:var(--tx);font:15px/1.6 system-ui,Roboto,sans-serif;min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px}
+.card{max-width:720px;width:100%;background:#141a26cc;border:1px solid var(--line);border-radius:20px;padding:34px;backdrop-filter:blur(6px)}
+h1{font-size:30px;letter-spacing:-.5px}h1 span{color:var(--acc)}
+p.sub{color:var(--dim);margin:6px 0 22px}
+ol{margin:0 0 22px 20px}li{margin:8px 0}
+code{background:#0b0e14;border:1px solid var(--line);border-radius:6px;padding:1px 7px;font-size:13px;color:var(--acc)}
+.row{display:flex;gap:10px;margin-top:8px}
+input{flex:1;background:var(--bg);border:1px solid var(--line);color:var(--tx);border-radius:12px;padding:14px;font-size:16px}
+button{background:var(--acc);color:#04120b;font-weight:800;border:0;border-radius:12px;padding:14px 22px;font-size:16px;cursor:pointer}
+a.dl{display:inline-block;margin-top:16px;color:var(--acc);font-weight:700;text-decoration:none;border:1px solid var(--acc);border-radius:12px;padding:10px 16px}
+.warn{font-size:12.5px;color:var(--dim);margin-top:18px;border-top:1px dashed var(--line);padding-top:14px}
+</style>
+</head>
+<body>
+<div class="card">
+<h1>Device<span>Link</span> 📱⇄🖥</h1>
+<p class="sub">Live screen, touch, camera, apps — apne Android ko browser se control karo. Zero install on the computer, ek APK on the phone. LAN-only prototype.</p>
+<ol>
+<li>Phone pe <b>DeviceLink APK</b> install karo (MIUI: “Install unknown apps” allow). <a class="dl" href="https://github.com/ancientgamer696-commits/device-link/releases/latest/download/app-debug.apk" style="margin:0 0 0 8px;padding:4px 10px;font-size:13px">⬇ Download APK</a></li>
+<li>App kholo → <code>Start screen streaming</code> → <b>Allow now</b>, phir step 2 ka <b>Accessibility</b> toggle ON karo.</li>
+<li>Dono devices ek hi Wi‑Fi pe rakho. Neeche phone pe dikha hua IP daalo:</li>
+</ol>
+<div class="row">
+<input id="ip" placeholder="192.168.1.23" inputmode="decimal">
+<button onclick="go()">Open Remote →</button>
+</div>
+<span class="warn">⚠ Sirf apne device pe chalao. Yeh ek DIY prototype hai — koi password nahi, koi cloud nahi: sab kuch aapke Wi‑Fi tak seemit. Internet pe access ke liye repo ka <code>worker/</code> (Cloudflare relay) deploy karo.</span>
+</div>
+<script>
+function go(){ var v=document.getElementById('ip').value.trim(); if(!v){alert('phone ka IP daalo');return;} location.href='http://'+v+':8766'; }
+document.getElementById('ip').addEventListener('keydown',function(e){ if(e.key==='Enter')go(); });
+</script>
+</body>
+</html>

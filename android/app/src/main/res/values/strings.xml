@@ -1,0 +1,3 @@
+<resources>
+    <string name="acc_desc">DeviceLink uses gestures to receive taps from the browser remote. Only enable for devices you own.</string>
+</resources>
